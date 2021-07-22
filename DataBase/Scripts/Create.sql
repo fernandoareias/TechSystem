@@ -7,7 +7,7 @@ CREATE TABLE [Employee](
     [Id] UNIQUEIDENTIFIER NOT NULL,
     [Name] NVARCHAR(80) NOT NULL,
     [Wage] FLOAT NOT NULL,
-    [Gender] CHAR(2) NOT NULL CHECK(Gender IN('F', 'M')),
+    [Gender] CHAR(2) NOT NULL,
     [SupervisorId] UNIQUEIDENTIFIER,
     [DepartmentId] UNIQUEIDENTIFIER,
 
