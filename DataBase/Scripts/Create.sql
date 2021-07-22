@@ -7,9 +7,9 @@ CREATE TABLE [Employee](
     [Id] UNIQUEIDENTIFIER NOT NULL,
     [Name] NVARCHAR(80) NOT NULL,
     [Wage] FLOAT NOT NULL,
-    [Gender] CHAR(2) NOT NULL CHECK(Gender IN('F', 'N')),
-    [SupervisorId] UNIQUEIDENTIFIER NOT NULL,
-    [DepartmentId] UNIQUEIDENTIFIER NOT NULL,
+    [Gender] CHAR(2) NOT NULL CHECK(Gender IN('F', 'M')),
+    [SupervisorId] UNIQUEIDENTIFIER,
+    [DepartmentId] UNIQUEIDENTIFIER,
 
     CONSTRAINT [PK_Employee] PRIMARY KEY([Id]),
     CONSTRAINT [FK_Employee_Supervisor] FOREIGN KEY ([SupervisorId]) REFERENCES [Employee]([Id]) ON DELETE NO ACTION,
