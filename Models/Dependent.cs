@@ -1,5 +1,3 @@
-
-
 using System;
 using Dapper.Contrib.Extensions;
 
