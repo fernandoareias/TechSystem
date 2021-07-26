@@ -29,7 +29,7 @@ namespace TechSystem.Models
       [Required(ErrorMessage = "Esse campo é obrigatório")]
       public string Role { get; set; }
 
-      public List<Dependents> Dependents { get; set; }
+      public List<Dependent> Dependents { get; set; }
 
    }
 }

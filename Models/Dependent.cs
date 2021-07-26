@@ -5,8 +5,7 @@ using TechSystem.Models;
 
 namespace TechSystem.Models
 {
-   [Table("Dependent")]
-   public class Dependents
+   public class Dependent
    {
       [Key]
       public int Id { get; set; }
@@ -18,5 +17,7 @@ namespace TechSystem.Models
 
       [Required(ErrorMessage = "Esse campo é obrigatório")]
       public int EmployeeId { get; set; }
+
+
    }
 }

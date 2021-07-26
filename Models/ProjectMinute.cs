@@ -2,13 +2,18 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace BOBTechSystem.Models
+namespace TechSystem.Models
 {
    [Table("ProjectMinute")]
    public class ProjectMinute
    {
-      public Guid Id { get; set; }
+      [Key]
+      public int Id { get; set; }
+
+      [MaxLength(120, ErrorMessage = "Esse campo pode conter no máximo 120 caractéres")]
       public string Minutes { get; set; }
-      public Guid ProjectId { get; set; }
+
+      [Required(ErrorMessage = "Esse campo é obrigatório")]
+      public int ProjectId { get; set; }
    }
 }
