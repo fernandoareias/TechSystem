@@ -1,26 +1,32 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TechSystem.Data;
 using TechSystem.Models;
 
+// CRUD Employee Completado
+
 namespace TechSystem.Controllers
 {
    [Route("v1/employee")]
    public class EmployeeController : ControllerBase
    {
-      [HttpGet]
-      [Route("")]
 
+      [HttpGet]
+      [Route("")] // https://localhost:5001/v1/employee/
+      // Esse metódo retorna todos os funcionários cadastrados
       public async Task<ActionResult<List<Employee>>> Get([FromServices] DataContext context)
       {
          try
          {
-            var employeers = await context.Employees.AsNoTracking().ToListAsync();
+            // Caso tenha dependentes, retorna 
+            // Include() => INNER JOIN
+            var employeers = await context.Employees.Include(x => x.Dependents).AsNoTracking().ToListAsync();
             if (employeers == null)
-               return NotFound(new { message = "Não há funcionarios registrados" });
+               return NotFound(new { message = "Não foi possivel encontrar o funcionário" });
             return Ok(employeers);
          }
          catch (Exception)
@@ -31,12 +37,13 @@ namespace TechSystem.Controllers
       }
 
       [HttpGet]
-      [Route("{id:int}")]
-      public async Task<ActionResult<Employee>> GetById(int id, [FromServices] DataContext context, [FromBody] Employee model)
+      [Route("{id:int}")] // https://localhost:5001/v1/employee/1
+      // Esse metodo retorna caso exista, o funcionário portador do ID passado pela URL
+      public async Task<ActionResult<Employee>> GetById(int id, [FromServices] DataContext context)
       {
          try
          {
-            var employee = await context.Employees.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+            var employee = await context.Employees.Include(x => x.Dependents).AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
             if (employee == null)
                return NotFound(new { message = "Funcionário não encontrado" });
             return Ok(employee);
@@ -49,7 +56,8 @@ namespace TechSystem.Controllers
       }
 
       [HttpPost]
-      [Route("")]
+      [Route("")]// https://localhost:5001/v1/employee/
+      // Realiza o registro do funcionario
       public async Task<ActionResult<Employee>> Set([FromServices] DataContext context, [FromBody] Employee model)
       {
          if (!ModelState.IsValid)
@@ -71,14 +79,16 @@ namespace TechSystem.Controllers
 
 
       [HttpPut]
-      [Route("{id:int}")]
-
+      [Route("{id:int}")] // https://localhost:5001/v1/employee/2
+      // Realiza a atualização de dados do funcionário portador do ID passado pela URL
       public async Task<ActionResult<Employee>> Update(int id, [FromServices] DataContext context, [FromBody] Employee model)
       {
          if (!ModelState.IsValid)
             return BadRequest(ModelState);
+
          if (id != model.Id)
             return NotFound(new { message = "Funcionário não encontrado" });
+
          try
          {
             context.Entry<Employee>(model).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
@@ -93,15 +103,27 @@ namespace TechSystem.Controllers
       }
 
       [HttpDelete]
-      [Route("{id:int}")]
+      [Route("{id:int}")] // https://localhost:5001/v1/employee/5
+      // Caso exista, deleta o funcionário portador do ID passado pela URL
       public async Task<ActionResult<Employee>> Delete(int id, [FromServices] DataContext context)
       {
          var employe = await context.Employees.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
-         if (employe == null)
+
+         // Pega todos os dependentes que o funcionario possui
+         var dependent = await context.Dependents.AsNoTracking().Where(x => x.EmployeeId == id).ToListAsync();
+
+         if (employe == null || dependent == null)
             return NotFound(new { message = "Não foi possivel encontrar o funcionário" });
+
          try
          {
             context.Employees.Remove(employe);
+
+            // Remove todos os dependentes que o funcionário possui
+            foreach (var item in dependent)
+               context.Dependents.Remove(item);
+
+
             await context.SaveChangesAsync();
             return Ok(new { message = "Funcionário removido com sucesso" });
          }
