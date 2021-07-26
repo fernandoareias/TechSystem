@@ -1,13 +1,17 @@
 using System;
-using Dapper.Contrib.Extensions;
-
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 namespace BOBTechSystem.Models
 {
    [Table("DepartmentHasProject")]
    public class DepartmentHasProject
    {
-      public Guid DepartmentId { get; set; }
-      public Guid ProjectId { get; set; }
+
+      [Required(ErrorMessage = "Esse campo é obrigatório")]
+      public int DepartmentId { get; set; }
+
+      [Required(ErrorMessage = "Esse campo é obrigatório")]
+      public int ProjectId { get; set; }
 
 
    }
