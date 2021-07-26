@@ -1,29 +1,26 @@
-﻿using BOBTechSystem.Repository;
-using Microsoft.Data.SqlClient;
-using BOBTechSystem.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
-namespace BOBTechSystem
+namespace TechSystem
 {
-   class Program
-   {
-      static void Main(string[] args)
-      {
-         const string CONNECTSTRING = "Server=localhost;Database=BOBTech;User Id=sa;Password=Nando@37074957;";
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            CreateHostBuilder(args).Build().Run();
+        }
 
-         using (var connection = new SqlConnection(CONNECTSTRING))
-         {
-            var repository = new Repository<Employee>(connection);
-
-            var employee = repository.GetAll();
-
-            foreach (var item in employee)
-            {
-               System.Console.WriteLine(item.Name);
-            }
-
-            System.Console.WriteLine();
-         }
-      }
-   }
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                });
+    }
 }
-
