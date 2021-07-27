@@ -9,7 +9,7 @@ using TechSystem.Models;
 
 namespace TechSystem.Controllers
 {
-   [Route("v1/dependent")]
+   [Route("v1/dependent")] // https://localhost:5001/v1/dependent
    public class DependentController : ControllerBase
    {
 
