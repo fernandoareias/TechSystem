@@ -31,5 +31,8 @@ namespace TechSystem.Models
 
       public List<Dependent> Dependents { get; set; }
 
+      [Required(ErrorMessage = "Esse campo é obrigatório")]
+      public int DepartmentId { get; set; }
+
    }
 }
