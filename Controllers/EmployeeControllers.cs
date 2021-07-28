@@ -119,7 +119,7 @@ namespace TechSystem.Controllers
          {
             context.Employees.Remove(employe);
 
-            // Remove todos os dependentes que o funcionário possui
+            // Remove todos os dependentes que o funcionário possui, similar ao efeito CASCADE
             foreach (var item in dependent)
                context.Dependents.Remove(item);
 
