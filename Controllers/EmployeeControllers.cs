@@ -16,7 +16,7 @@ namespace TechSystem.Controllers
    {
 
       [HttpGet]
-      [Route("")] // https://localhost:5001/v1/employee/
+      [Route("")] // HTTP GET => https://localhost:5001/v1/employee/
       // Esse metódo retorna todos os funcionários cadastrados
       public async Task<ActionResult<List<Employee>>> Get([FromServices] DataContext context)
       {
@@ -37,7 +37,7 @@ namespace TechSystem.Controllers
       }
 
       [HttpGet]
-      [Route("{id:int}")] // https://localhost:5001/v1/employee/1
+      [Route("{id:int}")] //  HTTP GET => https://localhost:5001/v1/employee/1
       // Esse metodo retorna caso exista, o funcionário portador do ID passado pela URL
       public async Task<ActionResult<Employee>> GetById(int id, [FromServices] DataContext context)
       {
@@ -55,8 +55,27 @@ namespace TechSystem.Controllers
          }
       }
 
+      [HttpGet]
+      [Route("dependent/{id:int}")] // https://localhost:5001/v1/dependent/employee/2
+
+      public async Task<ActionResult<List<Dependent>>> GetByEmployee(int id, [FromServices] DataContext context)
+      {
+         try
+         {
+            var dependent = await context.Dependents.AsNoTracking().Where(x => x.EmployeeId == id).ToListAsync();
+            if (dependent == null)
+               return NotFound(new { message = "Esse funcionário não possui dependentes" });
+            return Ok(dependent);
+         }
+         catch (System.Exception)
+         {
+
+            return BadRequest(new { message = "Desculpe ocorreu um erro. Por favor, tente novamente mais tarde" });
+         }
+      }
+
       [HttpPost]
-      [Route("")]// https://localhost:5001/v1/employee/
+      [Route("")]//  HTTP PUT => https://localhost:5001/v1/employee/
       // Realiza o registro do funcionario
       public async Task<ActionResult<Employee>> Set([FromServices] DataContext context, [FromBody] Employee model)
       {
@@ -79,7 +98,7 @@ namespace TechSystem.Controllers
 
 
       [HttpPut]
-      [Route("{id:int}")] // https://localhost:5001/v1/employee/2
+      [Route("{id:int}")] // HTTP PUT => https://localhost:5001/v1/employee/2
       // Realiza a atualização de dados do funcionário portador do ID passado pela URL
       public async Task<ActionResult<Employee>> Update(int id, [FromServices] DataContext context, [FromBody] Employee model)
       {
@@ -103,26 +122,26 @@ namespace TechSystem.Controllers
       }
 
       [HttpDelete]
-      [Route("{id:int}")] // https://localhost:5001/v1/employee/5
+      [Route("{id:int}")] // HTTP DELETE => https://localhost:5001/v1/employee/5
       // Caso exista, deleta o funcionário portador do ID passado pela URL
       public async Task<ActionResult<Employee>> Delete(int id, [FromServices] DataContext context)
       {
-         var employe = await context.Employees.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+         var employe = await context.Employees.AsNoTracking().Include(x => x.Dependents).FirstOrDefaultAsync(x => x.Id == id);
 
          // Pega todos os dependentes que o funcionario possui
-         var dependent = await context.Dependents.AsNoTracking().Where(x => x.EmployeeId == id).ToListAsync();
+         //var dependent = await context.Dependents.AsNoTracking().Where(x => x.EmployeeId == id).ToListAsync();
 
-         if (employe == null || dependent == null)
+         if (employe == null)
             return NotFound(new { message = "Não foi possivel encontrar o funcionário" });
 
          try
          {
             context.Employees.Remove(employe);
-
-            // Remove todos os dependentes que o funcionário possui, similar ao efeito CASCADE
-            foreach (var item in dependent)
-               context.Dependents.Remove(item);
-
+            /*
+                        // Remove todos os dependentes que o funcionário possui, similar ao efeito CASCADE
+                        foreach (var item in dependent)
+                           context.Dependents.Remove(item);
+            */
 
             await context.SaveChangesAsync();
             return Ok(new { message = "Funcionário removido com sucesso" });
