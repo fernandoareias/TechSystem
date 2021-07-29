@@ -49,24 +49,7 @@ namespace TechSystem.Controllers
          }
       }
 
-      [HttpGet]
-      [Route("employee/{id:int}")] // https://localhost:5001/v1/dependent/employee/2
 
-      public async Task<ActionResult<List<Dependent>>> GetByEmployee(int id, [FromServices] DataContext context)
-      {
-         try
-         {
-            var dependent = await context.Dependents.AsNoTracking().Where(x => x.EmployeeId == id).ToListAsync();
-            if (dependent == null)
-               return NotFound(new { message = "Esse funcionário não possui dependentes" });
-            return Ok(dependent);
-         }
-         catch (System.Exception)
-         {
-
-            return BadRequest(new { message = "Desculpe ocorreu um erro. Por favor, tente novamente mais tarde" });
-         }
-      }
 
       [HttpPost]
       [Route("")] // https://localhost:5001/v1/dependent/
@@ -111,7 +94,7 @@ namespace TechSystem.Controllers
       }
 
       [HttpDelete]
-      [Route("{id:int}")]
+      [Route("{id:int}")] // https://localhost:5001/v1/dependent/2
 
       public async Task<ActionResult<Dependent>> Delete(int id, [FromServices] DataContext context)
       {
