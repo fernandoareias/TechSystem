@@ -9,7 +9,7 @@ using TechSystem.Models;
 
 namespace TechSystem.Controllers
 {
-   [Route("v1/project")]
+   [Route("v1/projects")]
    public class ProjectControllers : ControllerBase
    {
       [HttpGet]
