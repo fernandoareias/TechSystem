@@ -11,14 +11,20 @@ using TechSystem.Models;
 namespace TechSystem.Controllers
 {
 
-   [Route("v1/project/minutes")] // HTTP GET =>  https://localhost:5001/v1/project/minutes
+   [Route("v1/projects")] // HTTP GET =>  https://localhost:5001/v1/project/minutes
    public class MinuteController : ControllerBase
    {
 
       [HttpGet]
-      [Route("")]
-      public async Task<ActionResult<List<ProjectMinute>>> Get([FromServices] DataContext context)
+      [Route("{projectId:int}/minutes")]
+      public async Task<ActionResult<List<ProjectMinute>>> Get(int projectId, [FromServices] DataContext context)
       {
+
+         var project = await context.Projects.AsNoTracking().FirstOrDefaultAsync(x => x.Id == projectId);
+
+         if (project == null)
+            return NotFound();
+
          try
          {
             var minutes = await context.ProjectMinutes.AsNoTracking().ToListAsync();
@@ -35,12 +41,17 @@ namespace TechSystem.Controllers
 
 
       [HttpPost]
-      [Route("")] // HTTP PUT =>  https://localhost:5001/v1/project/minutes
+      [Route("{projectId:int}/minutes")] // HTTP PUT =>  https://localhost:5001/v1/project/minutes
 
-      public async Task<ActionResult<ProjectMinute>> Post([FromServices] DataContext context, [FromBody] ProjectMinute model)
+      public async Task<ActionResult<ProjectMinute>> Post(int projectId, [FromServices] DataContext context, [FromBody] ProjectMinute model)
       {
          if (!ModelState.IsValid)
             return BadRequest(ModelState);
+         var project = await context.Projects.AsNoTracking().FirstOrDefaultAsync(x => x.Id == projectId);
+
+         if (project == null)
+            return NotFound();
+
          try
          {
             context.ProjectMinutes.Add(model);
@@ -55,14 +66,18 @@ namespace TechSystem.Controllers
       }
 
       [HttpPut]
-      [Route("{id:int}")] // HTTP PUT =>  https://localhost:5001/v1/project/minutes/1
+      [Route("{projectId:int}/minutes/{minutesId:int}")] // HTTP PUT =>  https://localhost:5001/v1/project/minutes/1
 
-      public async Task<ActionResult<ProjectMinute>> Put(int id, [FromServices] DataContext context, [FromBody] ProjectMinute model)
+      public async Task<ActionResult<ProjectMinute>> Put(int projectId, int minutesId, [FromServices] DataContext context, [FromBody] ProjectMinute model)
       {
          if (!ModelState.IsValid)
             return BadRequest(ModelState);
+         var project = await context.Projects.AsNoTracking().FirstOrDefaultAsync(x => x.Id == projectId);
 
-         if (model.Id != id)
+         if (project == null)
+            return NotFound();
+
+         if (model.Id != minutesId)
             return NotFound();
 
          try
@@ -82,13 +97,19 @@ namespace TechSystem.Controllers
 
 
       [HttpDelete]
-      [Route("{id:int}")] // HTTP DELETE => https://localhost:5001/v1/project/minutes/1
+      [Route("{projectId:int}/minutes/{minutesId:int}")] // HTTP DELETE => https://localhost:5001/v1/project/minutes/1
 
-      public async Task<ActionResult<ProjectMinute>> Delete(int id, [FromServices] DataContext context)
+      public async Task<ActionResult<ProjectMinute>> Delete(int projectId, int minutesId, [FromServices] DataContext context)
       {
+
+         var project = await context.Projects.AsNoTracking().FirstOrDefaultAsync(x => x.Id == projectId);
+
+         if (project == null)
+            return NotFound();
+
          try
          {
-            var minute = await context.ProjectMinutes.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+            var minute = await context.ProjectMinutes.AsNoTracking().FirstOrDefaultAsync(x => x.Id == minutesId);
             if (minute == null)
                return NotFound();
 
