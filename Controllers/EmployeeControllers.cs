@@ -11,7 +11,7 @@ using TechSystem.Models;
 
 namespace TechSystem.Controllers
 {
-   [Route("v1/employee")]
+   [Route("v1/employees")]
    public class EmployeeController : ControllerBase
    {
 
@@ -55,24 +55,7 @@ namespace TechSystem.Controllers
          }
       }
 
-      [HttpGet]
-      [Route("dependent/{id:int}")] // https://localhost:5001/v1/dependent/employee/2
 
-      public async Task<ActionResult<List<Dependent>>> GetByEmployee(int id, [FromServices] DataContext context)
-      {
-         try
-         {
-            var dependent = await context.Dependents.AsNoTracking().Where(x => x.EmployeeId == id).ToListAsync();
-            if (dependent == null)
-               return NotFound(new { message = "Esse funcionário não possui dependentes" });
-            return Ok(dependent);
-         }
-         catch (System.Exception)
-         {
-
-            return BadRequest(new { message = "Desculpe ocorreu um erro. Por favor, tente novamente mais tarde" });
-         }
-      }
 
       [HttpPost]
       [Route("")]//  HTTP PUT => https://localhost:5001/v1/employee/
@@ -151,6 +134,10 @@ namespace TechSystem.Controllers
             return BadRequest(new { message = "Desculpe ocorreu um erro. Por favor, tente novamente mais tarde" });
          }
       }
+
+      // Dependents
+
+
    }
 
 }
