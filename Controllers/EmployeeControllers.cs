@@ -11,15 +11,18 @@ using TechSystem.Models;
 
 namespace TechSystem.Controllers
 {
-   [Route("v1/employees")]
+   [Route("v1/departments")]
    public class EmployeeController : ControllerBase
    {
 
       [HttpGet]
-      [Route("")] // HTTP GET => https://localhost:5001/v1/employee/
+      [Route("{departmentId:int}/employees")] // HTTP GET => https://localhost:5001/v1/employee/
       // Esse metódo retorna todos os funcionários cadastrados
-      public async Task<ActionResult<List<Employee>>> Get([FromServices] DataContext context)
+      public async Task<ActionResult<List<Employee>>> Get(int departmentId, [FromServices] DataContext context)
       {
+         var department = await context.Department.AsNoTracking().FirstOrDefaultAsync(x => x.Id == departmentId);
+         if (department == null)
+            return NotFound();
          try
          {
             // Caso tenha dependentes, retorna 
@@ -37,13 +40,16 @@ namespace TechSystem.Controllers
       }
 
       [HttpGet]
-      [Route("{id:int}")] //  HTTP GET => https://localhost:5001/v1/employee/1
+      [Route("{departmentId:int}/employees/{employeeId:int}")] //  HTTP GET => https://localhost:5001/v1/employee/1
       // Esse metodo retorna caso exista, o funcionário portador do ID passado pela URL
-      public async Task<ActionResult<Employee>> GetById(int id, [FromServices] DataContext context)
+      public async Task<ActionResult<Employee>> GetById(int employeeId, int departmentId, [FromServices] DataContext context)
       {
+         var department = await context.Department.AsNoTracking().FirstOrDefaultAsync(x => x.Id == departmentId);
+         if (department == null)
+            return NotFound();
          try
          {
-            var employee = await context.Employees.Include(x => x.Dependents).AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+            var employee = await context.Employees.Include(x => x.Dependents).AsNoTracking().FirstOrDefaultAsync(x => x.Id == employeeId);
             if (employee == null)
                return NotFound(new { message = "Funcionário não encontrado" });
             return Ok(employee);
@@ -58,13 +64,15 @@ namespace TechSystem.Controllers
 
 
       [HttpPost]
-      [Route("")]//  HTTP PUT => https://localhost:5001/v1/employee/
+      [Route("{departmentId:int}/employees")]//  HTTP PUT => https://localhost:5001/v1/employee/
       // Realiza o registro do funcionario
-      public async Task<ActionResult<Employee>> Set([FromServices] DataContext context, [FromBody] Employee model)
+      public async Task<ActionResult<Employee>> Set(int departmentId, [FromServices] DataContext context, [FromBody] Employee model)
       {
          if (!ModelState.IsValid)
             return BadRequest(ModelState);
-
+         var department = await context.Department.AsNoTracking().FirstOrDefaultAsync(x => x.Id == departmentId);
+         if (department == null)
+            return NotFound();
          try
          {
             context.Employees.Add(model);
@@ -81,14 +89,16 @@ namespace TechSystem.Controllers
 
 
       [HttpPut]
-      [Route("{id:int}")] // HTTP PUT => https://localhost:5001/v1/employee/2
+      [Route("{departmentId:int}/employees/{employeeId:int}")] // HTTP PUT => https://localhost:5001/v1/employee/2
       // Realiza a atualização de dados do funcionário portador do ID passado pela URL
-      public async Task<ActionResult<Employee>> Update(int id, [FromServices] DataContext context, [FromBody] Employee model)
+      public async Task<ActionResult<Employee>> Update(int employeeId, int departmentId, [FromServices] DataContext context, [FromBody] Employee model)
       {
          if (!ModelState.IsValid)
             return BadRequest(ModelState);
-
-         if (id != model.Id)
+         var department = await context.Department.AsNoTracking().FirstOrDefaultAsync(x => x.Id == departmentId);
+         if (department == null)
+            return NotFound();
+         if (employeeId != model.Id)
             return NotFound(new { message = "Funcionário não encontrado" });
 
          try
@@ -105,12 +115,14 @@ namespace TechSystem.Controllers
       }
 
       [HttpDelete]
-      [Route("{id:int}")] // HTTP DELETE => https://localhost:5001/v1/employee/5
+      [Route("{departmentId:int}/employees/{employeeId:int}")] // HTTP DELETE => https://localhost:5001/v1/employee/5
       // Caso exista, deleta o funcionário portador do ID passado pela URL
-      public async Task<ActionResult<Employee>> Delete(int id, [FromServices] DataContext context)
+      public async Task<ActionResult<Employee>> Delete(int employeeId, int departmentId, [FromServices] DataContext context)
       {
-         var employe = await context.Employees.AsNoTracking().Include(x => x.Dependents).FirstOrDefaultAsync(x => x.Id == id);
-
+         var employe = await context.Employees.AsNoTracking().Include(x => x.Dependents).FirstOrDefaultAsync(x => x.Id == employeeId);
+         var department = await context.Department.AsNoTracking().FirstOrDefaultAsync(x => x.Id == departmentId);
+         if (department == null)
+            return NotFound();
          if (employe == null)
             return NotFound(new { message = "Não foi possivel encontrar o funcionário" });
 
