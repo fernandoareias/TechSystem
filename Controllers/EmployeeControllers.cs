@@ -111,20 +111,12 @@ namespace TechSystem.Controllers
       {
          var employe = await context.Employees.AsNoTracking().Include(x => x.Dependents).FirstOrDefaultAsync(x => x.Id == id);
 
-         // Pega todos os dependentes que o funcionario possui
-         //var dependent = await context.Dependents.AsNoTracking().Where(x => x.EmployeeId == id).ToListAsync();
-
          if (employe == null)
             return NotFound(new { message = "Não foi possivel encontrar o funcionário" });
 
          try
          {
             context.Employees.Remove(employe);
-            /*
-                        // Remove todos os dependentes que o funcionário possui, similar ao efeito CASCADE
-                        foreach (var item in dependent)
-                           context.Dependents.Remove(item);
-            */
 
             await context.SaveChangesAsync();
             return Ok(new { message = "Funcionário removido com sucesso" });
@@ -134,10 +126,5 @@ namespace TechSystem.Controllers
             return BadRequest(new { message = "Desculpe ocorreu um erro. Por favor, tente novamente mais tarde" });
          }
       }
-
-      // Dependents
-
-
    }
-
 }
