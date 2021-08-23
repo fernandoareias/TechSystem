@@ -1,6 +1,6 @@
+### Observação
+Atualmente está utilizando modelo anêmico, na V2 será implementado modelo rico e testes.
 # TechSystem
-
-[Em Desenvolvimento]
 
 API para empresa fictícia.
 
