@@ -6,25 +6,20 @@ namespace TechSystem.Test
     [TestClass]
     public class NameTests
     {
+        private readonly Name _nameValid = new Name("Bobs", "Bobson");
+        private readonly Name _nameInvalid = new Name("", "");
         [TestMethod]
         public void ShouldReturnIfNameIsValid()
         {
-            var document = new Name("Bobs", "Bobson");
-            Assert.AreEqual(0, document.Notifications.Count);
+            Assert.AreEqual(true, _nameValid.IsValid);
         }
 
         [TestMethod]
-        public void ShouldReturnIfDocumentIsInvalid()
+        public void ShouldReturnIfNameIsInvalid()
         {
-            var document = new Name("b", "a");
-            Assert.AreEqual(false, document.IsValid);
+            Assert.AreEqual(false, _nameInvalid.IsValid);
         }
 
-        [TestMethod]
-        public void ShouldReturnIfDocumentIsEmpty()
-        {
-            var document = new Name("", "");
-            Assert.AreEqual(false, document.IsValid);
-        }
+
     }
 }
