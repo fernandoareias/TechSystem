@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TechSystem.Shared\TechSystem.Shared.csproj" />
+    <ProjectReference Include="..\TechSystem.Domain\TechSystem.Domain.csproj" />
   </ItemGroup>
 
 </Project>
