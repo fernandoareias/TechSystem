@@ -6,18 +6,21 @@ namespace TechSystem.Test
     [TestClass]
     public class DocumentsTests
     {
+        private readonly Document _documentValid = new Document("15046977079");
+        private readonly Document _documentInvalid = new Document("15046977");
+
+        // Deve retornar se documento for válido.
         [TestMethod]
         public void ShouldReturnIfDocumentIsValid()
         {
-            var document = new Document("15046977079");
-            Assert.AreEqual(true, document.IsValidate());
+            Assert.AreEqual(true, _documentValid.IsValidate());
         }
 
+        // Deve retornar se documento for inválido.
         [TestMethod]
         public void ShouldReturnIfDocumentIsInvalid()
         {
-            var document = new Document("15046977");
-            Assert.AreEqual(false, document.IsValidate());
+            Assert.AreEqual(false, _documentInvalid.IsValidate());
         }
     }
 }
