@@ -1,0 +1,14 @@
+TechSystem.Api/bin/
+TechSystem.Api/obj/
+
+TechSystem.Domain/bin/
+TechSystem.Domain/obj/
+
+TechSystem.Shared/bin/
+TechSystem.Shared/obj/
+
+TechSystem.Infra/bin/
+TechSystem.Infra/obj/
+
+TechSystem.Test/bin/
+TechSystem.Test/obj/
