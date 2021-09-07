@@ -37,6 +37,8 @@ namespace TechSystem.Api
             services.AddScoped<TechDataContext, TechDataContext>();
             services.AddTransient<IEmployeeRepository, EmployeeRepository>();
             services.AddTransient<EmployeeHandler, EmployeeHandler>();
+            services.AddTransient<IDependentRepository, DependentRepository>();
+            services.AddTransient<DependentHandlers, DependentHandlers>();
 
 
         }
