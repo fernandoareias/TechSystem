@@ -1,4 +1,4 @@
-namespace BoBStore.Shared
+namespace TechSystem.Shared
 {
     public static class Settings
     {
