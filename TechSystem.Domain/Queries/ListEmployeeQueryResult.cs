@@ -11,6 +11,5 @@ namespace TechSystem.Domain.Queries
         public decimal Wage { get; set; }
         public int Gender { get; set; }
         public int Role { get; set; }
-        public List<ListDependentsQueryResults> Dependents { get; set; }
     }
 }
