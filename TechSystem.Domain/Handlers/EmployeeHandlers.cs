@@ -8,6 +8,7 @@ using TechSystem.Domain.Repositories.Contracts;
 using TechSystem.Domain.ValueObjects;
 using TechSystem.Domain.Entities;
 using TechSystem.Domain.Commands.EmployeeCommands.Outputs;
+using System;
 
 namespace TechSystem.Domain.Handlers
 {
@@ -36,7 +37,7 @@ namespace TechSystem.Domain.Handlers
                 return new EmployeeCommandResults(false, "Houve um erro ao registrar o funcionário", Notifications);
 
             // Registra o funcionário no banco
-            _repository.Save(employee);
+            _repository.Create(employee);
 
             // Retorna um command result
             return new EmployeeCommandResults(true, "Funcionário registrado com sucesso !", new
@@ -47,6 +48,11 @@ namespace TechSystem.Domain.Handlers
                 Gender = employee.Gender,
                 Role = employee.Role
             });
+        }
+
+        public ICommandResults Handler(CreateEmployeeCommand Command, Guid Id)
+        {
+            throw new NotImplementedException();
         }
     }
 }
