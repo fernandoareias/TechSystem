@@ -25,19 +25,27 @@ namespace TechSystem.Api.Controllers
             _handler = handler;
         }
 
-
-        [HttpGet]
-        [Route("v1/employees/dependents")]
-        public IEnumerable<ListEmployeeAndDependentsQueryResults> GetEmployeesAndDependents()
-        {
-            return _repository.GetListEmployeesAndDependents();
-        }
+        /*
+                [HttpGet]
+                [Route("v1/employees/dependents")]
+                public IEnumerable<ListEmployeeAndDependentsQueryResults> GetEmployeesAndDependents()
+                {
+                    return _repository.GetListEmployeesAndDependents();
+                }*/
 
         [HttpGet]
         [Route("v1/employees")]
         public IEnumerable<ListEmployeeQueryResults> Get()
         {
             return _repository.Get();
+        }
+
+
+        [HttpGet]
+        [Route("v1/employees/{idEmployee}")]
+        public ListEmployeeQueryResults GetById(System.Guid id)
+        {
+            return _repository.GetById(id);
         }
 
 
