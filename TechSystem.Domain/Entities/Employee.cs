@@ -17,6 +17,24 @@ namespace TechSystem.Domain.Entities
         // Lista interna
         private readonly IList<Dependents> _dependents;
 
+        public Employee(System.Guid id, Name name, decimal wage, EGender gender, ERole role) : base(id)
+        {
+            Name = name;
+            Wage = wage;
+            Gender = gender;
+            Role = role;
+            _dependents = new List<Dependents>();
+
+            AddNotifications(
+                new Contract<Notification>()
+                .Requires()
+                .IsTrue(Name.IsValid, "Name", "Name é inválido.")
+                .IsGreaterThan(Wage, 1, "Wage", "Salário deve ser maior que zero.")
+                .IsGreaterThan(((int)Gender), 1, "Gender", "Genero inválido.")
+                .IsGreaterThan(((int)Role), 1, "Role", "Cargo inválido.")
+
+            );
+        }
         public Employee(Name name, decimal wage, EGender gender, ERole role)
         {
             Name = name;
