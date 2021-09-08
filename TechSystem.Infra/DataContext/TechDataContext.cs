@@ -3,7 +3,7 @@
 using System;
 using System.Data;
 using System.Data.SqlClient;
-using BoBStore.Shared;
+using TechSystem.Shared;
 
 namespace TechSystem.Infra.DataContext
 {
@@ -13,7 +13,7 @@ namespace TechSystem.Infra.DataContext
 
         public TechDataContext()
         {
-            Connection = new SqlConnection(Settings.ConnectionString);
+            Connection = new SqlConnection("server=localhost,1433;database=TechSystem;User ID=sa;Password=kpglk");
             Connection.Open();
 
         }
