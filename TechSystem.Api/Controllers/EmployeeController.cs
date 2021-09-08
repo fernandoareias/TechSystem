@@ -25,13 +25,13 @@ namespace TechSystem.Api.Controllers
             _handler = handler;
         }
 
-        /*
-                [HttpGet]
-                [Route("v1/employees/dependents")]
-                public IEnumerable<ListEmployeeAndDependentsQueryResults> GetEmployeesAndDependents()
-                {
-                    return _repository.GetListEmployeesAndDependents();
-                }*/
+
+        [HttpGet]
+        [Route("v1/employees/dependents")]
+        public IEnumerable<ListEmployeeAndDependentsQueryResults> GetEmployeesAndDependents()
+        {
+            return _repository.GetListEmployeesAndDependents();
+        }
 
         [HttpGet]
         [Route("v1/employees")]
@@ -60,5 +60,18 @@ namespace TechSystem.Api.Controllers
             return result;
         }
 
+
+        [HttpPut]
+        [Route("employees/{IdEmployee}")]
+
+        public ICommandResults Put(System.Guid IdEmployee, [FromBody] UpdateEmployeeCommand command)
+        {
+            command.SetId(IdEmployee);
+            var result = (ICommandResults)_handler.Handler(command);
+            if (_handler.IsValid == false)
+                return result;
+            return result;
+        }
     }
+
 }
