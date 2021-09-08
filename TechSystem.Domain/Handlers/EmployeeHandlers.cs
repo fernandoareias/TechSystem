@@ -14,7 +14,8 @@ namespace TechSystem.Domain.Handlers
 {
 
     public class EmployeeHandler : Notifiable<Notification>,
-                                    ICommandHandler<CreateEmployeeCommand>
+                                    ICommandHandler<CreateEmployeeCommand>,
+                                    ICommandHandler<UpdateEmployeeCommand>
     {
         private readonly IEmployeeRepository _repository;
         public EmployeeHandler(IEmployeeRepository repository)
@@ -51,6 +52,40 @@ namespace TechSystem.Domain.Handlers
         }
 
         public ICommandResults Handler(CreateEmployeeCommand Command, Guid Id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ICommandResults Handler(UpdateEmployeeCommand Command)
+        {
+            // Criação da VO
+            var name = new Name(Command.FirstName, Command.LastName);
+
+            // Criação do Funcionário.
+            var employee = new Employee(Command.Id, name, Command.Wage, (Enums.EGender)Command.Gender, (Enums.ERole)Command.Role);
+
+            // Verficia o funcionário
+            AddNotifications(employee);
+
+            // Caso inválido, retorna as notificações.
+            if (IsValid == false)
+                return new EmployeeCommandResults(false, "Houve um erro ao atualizar o funcionário", Notifications);
+
+            // Registra o funcionário no banco
+            _repository.Update(employee);
+
+            // Retorna um command result
+            return new EmployeeCommandResults(true, "Funcionário atualizar com sucesso !", new
+            {
+                Id = employee.Id,
+                Name = employee.Name,
+                Wage = employee.Wage,
+                Gender = employee.Gender,
+                Role = employee.Role
+            });
+        }
+
+        public ICommandResults Handler(UpdateEmployeeCommand Command, Guid Id)
         {
             throw new NotImplementedException();
         }
