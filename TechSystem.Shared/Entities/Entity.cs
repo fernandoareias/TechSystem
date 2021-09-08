@@ -11,6 +11,12 @@ namespace TechSystem.Shared.Entities
             Id = System.Guid.NewGuid();
         }
 
+        public Entity(System.Guid id)
+        {
+            Id = id;
+        }
+
+
         public System.Guid Id { get; private set; }
 
         // Compata os IDs
