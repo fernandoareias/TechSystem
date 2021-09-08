@@ -1,6 +1,8 @@
 
 
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using Dapper;
 using Slapper;
@@ -26,18 +28,27 @@ namespace TechSystem.Infra.Repositories
 
         public IEnumerable<ListEmployeeQueryResults> Get()
         {
+            return _context.Connection.Query<ListEmployeeQueryResults>("SELECT [Id], CONCAT([FirstName], ' ', [LastName]) AS [Name], [Wage], [Gender], [Role] FROM [Employee]");
+        }
+
+
+
+        public IEnumerable<ListEmployeeAndDependentsQueryResults> GetListEmployeesAndDependents()
+        {
+            // https://renatogroffe.medium.com/dapper-relacionamentos-um-para-um-e-um-para-muitos-exemplos-em-asp-net-core-cfb0bf0668
             var dadosx = _context
                    .Connection
                    .Query<dynamic>("SELECT E.[Id], CONCAT(E.[FirstName], ' ', E.[LastName]) AS [Name], E.[Wage] ,E.[Gender], E.[Role], D.Id AS Dependents_Id ,CONCAT(D.FirstName, ' ', D.LastName) AS Dependents_Name FROM [Employee] AS E INNER JOIN Dependents AS D ON E.[Id] = D.[EmployeeId] ORDER BY E.FirstName, D.FirstName");
-            AutoMapper.Configuration.AddIdentifier(typeof(ListEmployeeQueryResults), "Id");
+            // Realiza o mapeamento das Entidades com Slapper.Automapper
+            AutoMapper.Configuration.AddIdentifier(typeof(ListEmployeeAndDependentsQueryResults), "Id");
             AutoMapper.Configuration.AddIdentifier(typeof(ListDependentsQueryResults), "Id");
 
-            List<ListEmployeeQueryResults> employeesx = (AutoMapper.MapDynamic<ListEmployeeQueryResults>(dadosx) as IEnumerable<ListEmployeeQueryResults>).ToList();
+            List<ListEmployeeAndDependentsQueryResults> employeesx = (AutoMapper.MapDynamic<ListEmployeeAndDependentsQueryResults>(dadosx) as IEnumerable<ListEmployeeAndDependentsQueryResults>).ToList();
 
             return employeesx;
         }
 
-        public void Save(Employee employee)
+        public void Create(Employee employee)
         {
             _context.Connection.Execute("spCreateEmployee",
                 new
@@ -45,10 +56,27 @@ namespace TechSystem.Infra.Repositories
                     Id = employee.Id,
                     FirstName = employee.Name.FirstName,
                     LastName = employee.Name.LastName,
+                    Wage = employee.Wage,
                     Gender = employee.Gender,
                     Role = employee.Role
-                }
+                },
+                commandType: CommandType.StoredProcedure
             );
+        }
+
+        public void Update(Employee employee)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void Delete(Employee employee)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public ListEmployeeQueryResults GetById(Guid Id)
+        {
+            return _context.Connection.Query<ListEmployeeQueryResults>("SELECT [Id], CONCAT([FirstName], ' ', [LastName]) AS [Name], [Wage], [Gender], [Role] FROM [Employee] WHERE [Id] = Id").FirstOrDefault();
         }
     }
 }
