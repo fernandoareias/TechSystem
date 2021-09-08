@@ -1,5 +1,6 @@
 TechSystem.Api/bin/
 TechSystem.Api/obj/
+TechSystem.Api/appsettings.json
 
 TechSystem.Domain/bin/
 TechSystem.Domain/obj/
@@ -9,6 +10,7 @@ TechSystem.Shared/obj/
 
 TechSystem.Infra/bin/
 TechSystem.Infra/obj/
+TechSystem.Infra/DataContext/
 
 TechSystem.Test/bin/
 TechSystem.Test/obj/
