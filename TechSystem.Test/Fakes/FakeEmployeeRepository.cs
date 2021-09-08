@@ -1,6 +1,7 @@
 
 
 
+using System;
 using System.Collections.Generic;
 using TechSystem.Domain.Entities;
 using TechSystem.Domain.Queries;
@@ -20,9 +21,29 @@ namespace TechSystem.Test.Fakes
             return new List<ListEmployeeQueryResults>();
         }
 
-        public void Save(Employee employee)
+        public IEnumerable<ListEmployeeAndDependentsQueryResults> GetListEmployeesAndDependents()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void Create(Employee employee)
         {
 
+        }
+
+        public void Update(Employee employee)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void Delete(Employee employee)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public ListEmployeeQueryResults GetById(Guid Id)
+        {
+            throw new NotImplementedException();
         }
     }
 }
