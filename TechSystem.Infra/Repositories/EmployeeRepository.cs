@@ -66,7 +66,18 @@ namespace TechSystem.Infra.Repositories
 
         public void Update(Employee employee)
         {
-            throw new System.NotImplementedException();
+            _context.Connection.Execute("spUpdateEmployee",
+               new
+               {
+                   Id = employee.Id,
+                   FirstName = employee.Name.FirstName,
+                   LastName = employee.Name.LastName,
+                   Wage = employee.Wage,
+                   Gender = employee.Gender,
+                   Role = employee.Role
+               },
+               commandType: CommandType.StoredProcedure
+           );
         }
 
         public void Delete(Employee employee)
