@@ -1,3 +1,4 @@
+/*
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace TechSystem.Test
@@ -8,6 +9,8 @@ namespace TechSystem.Test
         [TestMethod]
         public void TestMethod1()
         {
+            Assert.Fail();
         }
     }
 }
+*/
